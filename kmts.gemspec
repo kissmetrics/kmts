@@ -2,14 +2,14 @@
 require File.expand_path("../lib/km/version", __FILE__)
 
 Gem::Specification.new do |s|
-  s.name        = "km"
+  s.name        = "kmts"
   s.version     = KM::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["KISSmetrics"]
   s.email       = ["support@kissmetrics.com"]
-  s.homepage    = "https://github.com/kissmetrics/km"
-  s.summary     = "KISSmetrics ruby API gem"
-  s.description = "KISSmetrics ruby API gem"
+  s.homepage    = "https://github.com/kissmetrics/km/tree/threadsafe"
+  s.summary     = "KISSmetrics threadsafe ruby API gem"
+  s.description = "KISSmetrics threadsafe ruby API gem"
 
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "kissmetrics"
