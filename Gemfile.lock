@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    km (1.1.3)
+    kmts (1.0.1)
 
 GEM
   remote: http://rubygems.org/
@@ -24,6 +24,6 @@ PLATFORMS
 DEPENDENCIES
   bundler (>= 1.0.0)
   json
-  km!
+  kmts!
   rake
   rspec (~> 2.4.0)
