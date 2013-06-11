@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["KISSmetrics"]
   s.email       = ["support@kissmetrics.com"]
-  s.homepage    = "https://github.com/kissmetrics/km/tree/threadsafe"
+  s.homepage    = "https://github.com/kissmetrics/km/tree/kmts"
   s.summary     = "KISSmetrics threadsafe ruby API gem"
   s.description = "KISSmetrics threadsafe ruby API gem"
 
