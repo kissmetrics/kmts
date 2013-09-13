@@ -1,13 +1,13 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path("../lib/km/version", __FILE__)
+require File.expand_path("../lib/kmts/version", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "kmts"
-  s.version     = KM::VERSION
+  s.version     = KMTS::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["KISSmetrics"]
   s.email       = ["support@kissmetrics.com"]
-  s.homepage    = "https://github.com/kissmetrics/km/tree/kmts"
+  s.homepage    = "https://github.com/kissmetrics/kmts"
   s.summary     = "KISSmetrics threadsafe ruby API gem"
   s.description = "KISSmetrics threadsafe ruby API gem"
 

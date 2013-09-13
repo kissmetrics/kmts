@@ -1,8 +1,8 @@
-require 'km'
+require 'kmts'
 require 'fileutils'
 require 'accept'
 
-class KM
+class KMTS
   class << self
     public :log_name, :reset, :log
   end
@@ -67,8 +67,8 @@ class Hash
 end
 
 def write_log(type, content)
-  KM.instance_eval { @log_dir = __('log') }
-  log_name = KM.send :log_name, type
+  KMTS.instance_eval { @log_dir = __('log') }
+  log_name = KMTS.send :log_name, type
   File.open(log_name, 'w+') do |fh|
     fh.puts content
   end

@@ -2,12 +2,11 @@ require 'uri'
 require 'socket'
 require 'net/http'
 require 'fileutils'
-require 'km/saas'
+require 'kmts/saas'
 
 class KMError < StandardError; end
 
-class KM
-  @id        = nil
+class KMTS
   @key       = nil
   @logs      = {}
   @host      = 'trk.kissmetrics.com:80'
@@ -51,18 +50,14 @@ class KM
       @env ||= 'production'
     end
 
-    def identify(id)
-      @id = id
-    end
-
-    def record(action,props={})
+    def record(id, action, props={})
       props = hash_keys_to_str(props)
       begin
-        return unless is_initialized_and_identified?
-        return set(action) if action.class == Hash
+        return unless is_initialized?
+        return set(id, action) if action.class == Hash
 
         props.update('_n' => action)
-        generate_query('e', props)
+        generate_query('e', props, id)
       rescue Exception => e
         log_error(e)
       end
@@ -77,10 +72,10 @@ class KM
       end
     end
 
-    def set(data)
+    def set(id, data)
       begin
-        return unless is_initialized_and_identified?
-        generate_query('s', data)
+        return unless is_initialized?
+        generate_query('s', data, id)
       rescue Exception => e
         log_error(e)
       end
@@ -178,6 +173,7 @@ class KM
     def log(type,msg)
       begin
         File.open(log_name(type), 'a') do |fh|
+          fh.flock(File::LOCK_EX)
           fh.puts(msg)
         end
       rescue Exception => e
@@ -187,11 +183,11 @@ class KM
     end
 
 
-    def generate_query(type, data, update=true)
+    def generate_query(type, data, id = nil)
       data = hash_keys_to_str(data)
       query_arr = []
       query     = ''
-      data.update('_p' => @id) unless update == false
+      data.update('_p' => id) if id
       data.update('_k' => @key)
       data.update '_d' => 1 if data['_t']
       data['_t'] ||= Time.now.to_i
@@ -237,22 +233,9 @@ class KM
       end
     end
 
-    def is_identified?
-      if @id == nil
-        log_error IdentError.new("Need to identify first (KM::identify <user>)")
-        return false
-      end
-      return true
-    end
-
-    def is_initialized_and_identified?
-      return false unless is_initialized?
-      return is_identified?
-    end
-
     def is_initialized?
       if @key == nil
-        log_error InitError.new("Need to initialize first (KM::init <your_key>)")
+        log_error InitError.new("Need to initialize first (KMTS::init <your_key>)")
         return false
       end
       return true

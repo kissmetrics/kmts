@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'optparse'
-require 'km'
+require 'kmts'
 
 env = 'production'
 force = false
@@ -9,7 +9,7 @@ begin
   parser = OptionParser.new()
   parser.banner = "#{File.basename($0)} [<log_dir>]\n\n"
 
-  parser.on("-f", "--force", "Force sending the data to KM, ignoring the environment.") do |e|
+  parser.on("-f", "--force", "Force sending the data to KMTS, ignoring the environment.") do |e|
     force = true
   end
 
@@ -31,5 +31,5 @@ rescue => e
 end
 
 
-KM.init('', :log_dir => opts[0] || KM.log_dir, :host => opts[1] || KM.host, :force => force, :env => env)
-KM.send_logged_queries
+KMTS.init('', :log_dir => opts[0] || KMTS.log_dir, :host => opts[1] || KMTS.host, :force => force, :env => env)
+KMTS.send_logged_queries
