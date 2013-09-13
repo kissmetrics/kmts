@@ -1,4 +1,4 @@
 source :gemcutter
 
-# Specify your gem's dependencies in km.gemspec
+# Specify your gem's dependencies in kmts.gemspec
 gemspec

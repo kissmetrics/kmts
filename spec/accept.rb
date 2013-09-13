@@ -20,12 +20,12 @@ class Accept
     @server         = TCPServer.new(opts[:port])
     @@input_history = []
     @handle         = Thread.start do
-      while (@session = server.accept)
-        Thread.start do
+      loop do
+        Thread.start(@server.accept) do |client|
           # puts "log: Connection from #{session.peeraddr[2]} at #{session.peeraddr[3]}"
           # session.puts "Server: Connection from #{session.peeraddr[2]}\n"
-          handle_input
-          session.close
+          handle_input(client)
+          client.close
         end
       end
     end
@@ -37,15 +37,15 @@ class Accept
     @handle.join
   end
 
-  def handle_input
-    input = session.gets
+  def handle_input(client)
+    input = client.gets
     if input
       puts "received: #{input.inspect}" if opts[:debug]
       case input
       when /clear/
         clear
       when /history/
-        session.puts input_history.to_json
+        client.puts input_history.to_json
       when /exit/
         begin
           close
@@ -54,6 +54,7 @@ class Accept
         return
       when /^\s*(GET|POST|PUT|DELETE)\s+([^ ]*)\s+(.*)$/
         @@input_history << parse_input(input)
+        client.puts "HTTP/1.1 200 OK"
       else
         @@input_history << input.chomp
       end
