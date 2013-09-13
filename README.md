@@ -12,16 +12,16 @@ gem 'kmts', '>= 1.0.0'
 
 Otherwise, the gem is available on GitHub:
 
-https://github.com/kissmetrics/km/tree/threadsafe
+https://github.com/kissmetrics/kmts
 
 You will need your API key which you can find in your [site settings](http://support.kissmetrics.com/misc/site-settings).
 
 ## Usage
 
-Before calling any of the common methods you **must** call `KM.init` with a valid API key:
+Before calling any of the common methods you **must** call `KMTS.init` with a valid API key:
 
 ```ruby
-KM.init('KM_KEY' [, options])
+KMTS.init('KM_KEY' [, options])
 ```
 
 The available options are:
@@ -35,7 +35,7 @@ The available options are:
 ### Sample:
 
 ```ruby
-KM.init("this is your key", :log_dir => '/var/logs/kissmetrics/')
+KMTS.init("this is your key", :log_dir => '/var/logs/kissmetrics/')
 ```
 
 ## Example Calls
@@ -43,11 +43,11 @@ KM.init("this is your key", :log_dir => '/var/logs/kissmetrics/')
 **Note**: these calls use the newer syntax of the threadsafe gem. They are not compatible with the previous gem.
 
 ```ruby
-KM.record('bob@bob.com', 'Viewed Homepage')
-KM.record('bob@bob.com', 'Signed Up', {'Plan' => 'Pro', 'Amount' => 99.95})
-KM.record('bob@bob.com', 'Signed Up', {'_d' => 1, '_t' => 1234567890})
-KM.set('bob@bob.com', {:gender=>'male', 'Plan Name' => 'Pro'})
-KM.alias('bob', 'bob@bob.com')
+KMTS.record('bob@bob.com', 'Viewed Homepage')
+KMTS.record('bob@bob.com', 'Signed Up', {'Plan' => 'Pro', 'Amount' => 99.95})
+KMTS.record('bob@bob.com', 'Signed Up', {'_d' => 1, '_t' => 1234567890})
+KMTS.set('bob@bob.com', {:gender=>'male', 'Plan Name' => 'Pro'})
+KMTS.alias('bob', 'bob@bob.com')
 ```
 
 ## Troubleshooting

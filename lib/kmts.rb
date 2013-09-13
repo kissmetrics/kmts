@@ -2,11 +2,11 @@ require 'uri'
 require 'socket'
 require 'net/http'
 require 'fileutils'
-require 'km/saas'
+require 'kmts/saas'
 
 class KMError < StandardError; end
 
-class KM
+class KMTS
   @key       = nil
   @logs      = {}
   @host      = 'trk.kissmetrics.com:80'
@@ -233,22 +233,9 @@ class KM
       end
     end
 
-    def is_identified?
-      if @id == nil
-        log_error IdentError.new("Need to identify first (KM::identify <user>)")
-        return false
-      end
-      return true
-    end
-
-    def is_initialized_and_identified?
-      return false unless is_initialized?
-      return is_identified?
-    end
-
     def is_initialized?
       if @key == nil
-        log_error InitError.new("Need to initialize first (KM::init <your_key>)")
+        log_error InitError.new("Need to initialize first (KMTS::init <your_key>)")
         return false
       end
       return true

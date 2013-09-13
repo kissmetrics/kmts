@@ -1,5 +1,5 @@
-require 'km'
-class KM
+require 'kmts'
+class KMTS
   module SaaS
     def signed_up(id, plan=nil, props = {})
       props['Plan Name'] = plan unless plan.to_s.empty?
@@ -36,4 +36,4 @@ class KM
     # ------------------------------------------------------------------------
   end
 end
-KM.send :extend, KM::SaaS
+KMTS.send :extend, KMTS::SaaS

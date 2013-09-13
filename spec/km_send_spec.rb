@@ -8,15 +8,15 @@ describe 'km_send' do
       Dir.glob(__('log','*')).each do |file|
         FileUtils.rm file
       end
-      KM.reset
+      KMTS.reset
       Helper.clear
     end
     context "with default environment" do
       before do
-        KM::init 'KM_KEY', :log_dir => __('log'), :host => '127.0.0.1:9292', :use_cron => true
+        KMTS::init 'KM_KEY', :log_dir => __('log'), :host => '127.0.0.1:9292', :use_cron => true
       end
       it "should test commandline version" do
-        KM::record 'bob', 'Signup', 'age' => 26
+        KMTS::record 'bob', 'Signup', 'age' => 26
         `bundle exec km_send #{__('log/')} 127.0.0.1:9292`
         sleep 0.1
         res = Helper.accept(:history).first.indifferent
@@ -82,8 +82,8 @@ describe 'km_send' do
       end
     end
     it "should send from diff environment when force flag is used" do
-      KM::init 'KM_KEY', :log_dir => __('log'), :host => '127.0.0.1:9292', :use_cron => true, :env => 'development', :force => true
-      KM::record 'bob', 'Signup', 'age' => 26
+      KMTS::init 'KM_KEY', :log_dir => __('log'), :host => '127.0.0.1:9292', :use_cron => true, :env => 'development', :force => true
+      KMTS::record 'bob', 'Signup', 'age' => 26
       `bundle exec km_send -f -e development #{__('log/')} 127.0.0.1:9292`
       sleep 0.1
       res = Helper.accept(:history).first.indifferent

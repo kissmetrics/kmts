@@ -1,3 +1,3 @@
-class KM
+class KMTS
   VERSION = "1.0.3"
 end
