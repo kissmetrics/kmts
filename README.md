@@ -7,7 +7,7 @@ This gem is a threadsafe fork of the original `km` gem.
 The best way to install the gem is using `gem install kmts` or by adding it to your `Gemfile`:
 
 ```ruby
-gem 'kmts', '~> 1.0.0', require: "km"
+gem 'kmts', '~> 2.0.0'
 ```
 
 Otherwise, the gem is available on GitHub:
