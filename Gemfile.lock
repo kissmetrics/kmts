@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    kmts (1.0.3)
+    kmts (2.0.0)
 
 GEM
   remote: http://rubygems.org/
