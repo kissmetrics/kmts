@@ -5,6 +5,7 @@ PATH
 
 GEM
   remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     diff-lcs (1.1.2)
     json (1.5.1)
