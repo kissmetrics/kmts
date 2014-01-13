@@ -42,6 +42,13 @@ The available options are:
 KMTS.init("this is your key", :log_dir => '/var/logs/kissmetrics/')
 ```
 
+### Sample (with SSL and timeouts)
+```ruby
+KMTS.init("this is your key", :log_dir       => File.join(Rails.root.to_s, 'log'),
+							  :host          => "https://trk.kissmetrics.com:443",
+							  :http_timeout  => 10
+```
+
 ## Example Calls
 
 **Note**: these calls use the newer syntax of the threadsafe gem. They are not compatible with the previous gem.

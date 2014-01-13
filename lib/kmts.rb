@@ -1,19 +1,22 @@
 require 'uri'
 require 'socket'
 require 'net/http'
+require 'net/https'
 require 'fileutils'
 require 'kmts/saas'
 
 class KMError < StandardError; end
 
 class KMTS
-  @key       = nil
-  @logs      = {}
-  @host      = 'trk.kissmetrics.com:80'
-  @log_dir   = '/tmp'
-  @to_stderr = true
-  @use_cron  = false
-  @dryrun    = false
+  @key          = nil
+  @logs         = {}
+  @host         = 'http://trk.kissmetrics.com:80'
+  @http_timeout = 60
+  @log_dir      = '/tmp'
+  @to_stderr    = true
+  @use_cron     = false
+  @dryrun       = false
+  @debug_mode   = false
 
   class << self
     class IdentError < StandardError; end
@@ -21,23 +24,28 @@ class KMTS
 
     def init(key, options={})
       default = {
-        :host      => @host,
-        :log_dir   => @log_dir,
-        :to_stderr => @to_stderr,
-        :use_cron  => @use_cron,
-        :dryrun    => @dryrun,
-        :env       => set_env,
+        :host         => @host,
+        :http_timeout => @http_timeout,
+        :log_dir      => @log_dir,
+        :to_stderr    => @to_stderr,
+        :use_cron     => @use_cron,
+        :dryrun       => @dryrun,
+        :debug_mode   => @debug_mode,
+        :env          => set_env,
       }
       options = default.merge(options)
 
       begin
-        @key       = key
-        @host      = options[:host]
-        @log_dir   = options[:log_dir]
-        @use_cron  = options[:use_cron]
-        @to_stderr = options[:to_stderr]
-        @dryrun    = options[:dryrun]
-        @env       = options[:env]
+        @key          = key
+        @host         = options[:host]
+        @http_timeout = options[:http_timeout]
+        @log_dir      = options[:log_dir]
+        @use_cron     = options[:use_cron]
+        @to_stderr    = options[:to_stderr]
+        @dryrun       = options[:dryrun]
+        @debug_mode   = options[:debug_mode]
+        @env          = options[:env]
+
         log_dir_writable?
       rescue Exception => e
         log_error(e)
@@ -109,7 +117,7 @@ class KMTS
       @log_dir
     end
     def host
-      @host
+      @host.gsub(/http[s]:\/\//, '')
     end
 
     # :stopdoc:
@@ -215,11 +223,19 @@ class KMTS
         log_sent(line)
       else
         begin
-          host,port = @host.split(':')
+          host_url = @host.match(/http[s]:\/\//) ? @host : "http://" + @host
+          url = URI.parse(host_url)
+
           proxy = URI.parse(ENV['http_proxy'] || ENV['HTTP_PROXY'] || '')
-          res = Net::HTTP::Proxy(proxy.host, proxy.port, proxy.user, proxy.password).start(host, port) do |http|
-            http.get(line)
+          http = Net::HTTP::Proxy(proxy.host, proxy.port, proxy.user, proxy.password).new(url.host, url.port)
+          if url.scheme == 'https' or url.port == 443
+            http.use_ssl = true
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
           end
+          http.open_timeout = http.read_timeout = @http_timeout
+          http.set_debug_output $stderr if @debug_mode
+
+          res = http.get(line)
         rescue Exception => e
           raise KMError.new("#{e} for host #{@host}")
         end
