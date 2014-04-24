@@ -14,6 +14,7 @@ class KMTS
   @to_stderr = true
   @use_cron  = false
   @dryrun    = false
+  @timeout   = 3
 
   class << self
     class IdentError < StandardError; end
@@ -26,6 +27,7 @@ class KMTS
         :to_stderr => @to_stderr,
         :use_cron  => @use_cron,
         :dryrun    => @dryrun,
+        :timeout   => @timeout,
         :env       => set_env,
       }
       options = default.merge(options)
@@ -37,6 +39,7 @@ class KMTS
         @use_cron  = options[:use_cron]
         @to_stderr = options[:to_stderr]
         @dryrun    = options[:dryrun]
+        @timeout   = options[:timeout]
         @env       = options[:env]
         log_dir_writable?
       rescue Exception => e
@@ -217,9 +220,11 @@ class KMTS
         begin
           host,port = @host.split(':')
           proxy = URI.parse(ENV['http_proxy'] || ENV['HTTP_PROXY'] || '')
-          res = Net::HTTP::Proxy(proxy.host, proxy.port, proxy.user, proxy.password).start(host, port) do |http|
-            http.get(line)
-          end
+
+          http = Net::HTTP::Proxy(proxy.host, proxy.port, proxy.user, proxy.password).new(host, port)
+          http.open_timeout = @timeout
+          http.read_timeout = @timeout
+          http.get(line)
         rescue Exception => e
           raise KMError.new("#{e} for host #{@host}")
         end
