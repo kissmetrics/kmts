@@ -189,7 +189,7 @@ class KMTS
       query     = ''
       data.update('_p' => id) if id
       data.update('_k' => @key)
-      data.update '_d' => 1 if data['_t']
+      data.update '_d' => 1 if data['_t']  || @use_cron
       data['_t'] ||= Time.now.to_i
       
       unsafe = Regexp.new("[^#{URI::REGEXP::PATTERN::UNRESERVED}]", false, 'N')
