@@ -203,7 +203,7 @@ class KMTS
         unless data['_t'].to_s =~ /\d{10}/ and data['_t'].to_i >= 0
           raise StandardError, "#{data['_t']} is not a valid unix timestamp"
         end
-      rescue Exception => e
+      rescue StandardError => e
         log_query(query)
         log_error(e)
       end
