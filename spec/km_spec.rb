@@ -18,6 +18,26 @@ describe KMTS do
     IO.readlines(KMTS::log_name(:error)).join.should =~ /Need to initialize first \(KMTS::init <your_key>\)/
   end
 
+  describe "timstamp" do
+    it "should fail if timestamp is not unix" do
+      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => '127.0.0.1:9292'
+      KMTS::record 'bob', 'Signup', 'age' => 26, '_p' => 'billybob', '_k' => 'foo', '_n' => 'something else', '_t' => 'bad_timestamp'
+      IO.readlines(KMTS::log_name(:error)) =~ /is not a valid unix timestamp/
+    end
+
+    it "should fail if timestamp is not valid unix" do
+      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => '127.0.0.1:9292'
+      KMTS::record 'bob', 'Signup', 'age' => 26, '_p' => 'billybob', '_k' => 'foo', '_n' => 'something else', '_t' => -0000000001
+      IO.readlines(KMTS::log_name(:error)) =~ /is not a valid unix timestamp/
+    end
+
+    it "should succeed if timestamp is valid unix" do
+      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => '127.0.0.1:9292'
+      KMTS::record 'bob', 'Signup', 'age' => 26, '_p' => 'billybob', '_k' => 'foo', '_n' => 'something else', '_t' => 1234567890
+      File.exists?(KMTS::log_name(:error)).should == false
+    end
+  end
+
   it "shouldn't fail on alias without identifying" do
     KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => '127.0.0.1:9292'
     KMTS::alias 'peter','joe' # Alias "bob" to "robert"

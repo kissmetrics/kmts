@@ -191,13 +191,24 @@ class KMTS
       data.update('_k' => @key)
       data.update '_d' => 1 if data['_t']
       data['_t'] ||= Time.now.to_i
-      
+
       unsafe = Regexp.new("[^#{URI::REGEXP::PATTERN::UNRESERVED}]", false, 'N')
       
       data.inject(query) do |query,key_val|
         query_arr <<  key_val.collect { |i| URI.escape(i.to_s, unsafe) }.join('=')
       end
       query = '/' + type + '?' + query_arr.join('&')
+
+      begin
+        unless data['_t'].to_s =~ /\A\d+\z/ && data['_t'].to_i >= 0
+          raise StandardError, "#{data['_t']} is not a valid unix timestamp"
+        end
+      rescue StandardError => e
+        log_query(query)
+        log_error(e)
+        return
+      end
+
       if @use_cron
         log_query(query)
       else
