@@ -200,12 +200,13 @@ class KMTS
       query = '/' + type + '?' + query_arr.join('&')
 
       begin
-        unless data['_t'].to_s =~ /\d{10}/ and data['_t'].to_i >= 0
+        unless data['_t'].to_s =~ /\A\d+\z/ && data['_t'].to_i >= 0
           raise StandardError, "#{data['_t']} is not a valid unix timestamp"
         end
       rescue StandardError => e
         log_query(query)
         log_error(e)
+        return
       end
 
       if @use_cron
