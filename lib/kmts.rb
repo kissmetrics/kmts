@@ -235,7 +235,7 @@ class KMTS
 
     def is_initialized?
       if @key == nil
-        log_error InitError.new("Need to initialize first (KMTS::init <your_key>)")
+        log(:warn, "Need to initialize first (KMTS::init <your_key>)")
         return false
       end
       return true
