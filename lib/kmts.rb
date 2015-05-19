@@ -234,11 +234,9 @@ class KMTS
     end
 
     def is_initialized?
-      if @key == nil
-        log(:warn, "Need to initialize first (KMTS::init <your_key>)")
-        return false
-      end
-      return true
+      return true if @key.present?
+      log(:warn, "Need to initialize first (KMTS::init <your_key>)")
+      false
     end
     # :startdoc:
   end
