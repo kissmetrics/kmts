@@ -3,8 +3,6 @@ require 'kmts/saas'
 describe KMTS do
   before do
     KMTS::reset
-    now = Time.now
-    Time.stub!(:now).and_return(now)
     FileUtils.rm_f KMTS::log_name(:error)
     FileUtils.rm_f KMTS::log_name(:query)
     Helper.clear

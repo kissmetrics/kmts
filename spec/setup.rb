@@ -17,7 +17,7 @@ end
 
 class Helper
   def self.accept(cmd)
-    c = TCPSocket.new('localhost', 9292)
+    c = TCPSocket.new('127.0.0.1', 9292)
     c.puts cmd.to_s
     return JSON.parse(c.read) rescue nil
   end
@@ -75,3 +75,7 @@ def write_log(type, content)
 end
 
 accept = Accept.new
+
+RSpec.configure do |config|
+  config.expect_with(:rspec) { |c| c.syntax = :should }
+end

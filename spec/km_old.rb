@@ -2,15 +2,15 @@ require 'setup'
 
 describe KMTS do
   attr_accessor :send_query, :log
+
   before do
     @send_query = []
     @log = []
     KMTS.stub(:send_query).and_return { |*args| send_query << args }
     KMTS.stub(:log).and_return { |*args| log << Hash[*args] }
-    time = Time.at 1234567890
-    Time.stub!(:now).and_return(time)
     KMTS.reset
   end
+
   context "initialization" do
     it "should not record without initialization" do
       KMTS::record 'My Action'

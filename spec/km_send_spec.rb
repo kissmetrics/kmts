@@ -4,16 +4,16 @@ describe 'km_send' do
   context "using cron for sending logs" do
     before do
       now = Time.now
-      Time.stub!(:now).and_return(now)
       Dir.glob(__('log','*')).each do |file|
         FileUtils.rm file
       end
       KMTS.reset
       Helper.clear
     end
+
     context "with default environment" do
       before do
-        KMTS::init 'KM_KEY', :log_dir => __('log'), :host => '127.0.0.1:9292', :use_cron => true
+        KMTS::init 'KM_KEY', :log_dir => __('log'), :host => '127.0.0.1:9292', :use_cron => true, :env => 'production'
       end
       it "should test commandline version" do
         KMTS::record 'bob', 'Signup', 'age' => 26
@@ -24,7 +24,7 @@ describe 'km_send' do
         res[:query]['_k'].first.should == 'KM_KEY'
         res[:query]['_p'].first.should == 'bob'
         res[:query]['_n'].first.should == 'Signup'
-        res[:query]['_t'].first.should == Time.now.to_i.to_s
+        res[:query]['_t'].first.to_i.should be_within(10.0).of(Time.now.to_i)
         res[:query]['age'].first.should == '26'
       end
       it "should send from query_log" do
@@ -91,7 +91,7 @@ describe 'km_send' do
       res[:query]['_k'].first.should == 'KM_KEY'
       res[:query]['_p'].first.should == 'bob'
       res[:query]['_n'].first.should == 'Signup'
-      res[:query]['_t'].first.should == Time.now.to_i.to_s
+      res[:query]['_t'].first.to_i.should be_within(10.0).of(Time.now.to_i)
       res[:query]['age'].first.should == '26'
     end
   end
