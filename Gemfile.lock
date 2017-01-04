@@ -27,11 +27,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (>= 1.0.0)
-  json
+  bundler (~> 1.13)
+  json (~> 2.0)
   kmts!
-  rake
-  rspec
+  rake (~> 12.0)
+  rspec (~> 3.5)
 
 BUNDLED WITH
    1.13.7

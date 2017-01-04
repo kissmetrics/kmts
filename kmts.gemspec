@@ -5,19 +5,20 @@ Gem::Specification.new do |s|
   s.name        = "kmts"
   s.version     = KMTS::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["KISSmetrics"]
+  s.license     = "Apache-2.0"
+  s.authors     = ["Kissmetrics"]
   s.email       = ["support@kissmetrics.com"]
   s.homepage    = "https://github.com/kissmetrics/kmts"
-  s.summary     = "KISSmetrics threadsafe ruby API gem"
-  s.description = "KISSmetrics threadsafe ruby API gem"
+  s.summary     = "Threadsafe Ruby gem for Kissmetrics tracking API"
+  s.description = "A threadsafe Ruby gem that can be used to interact with the Kissmetrics tracking API."
 
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "kissmetrics"
 
-  s.add_development_dependency "bundler", ">= 1.0.0"
-  s.add_development_dependency "rspec"
-  s.add_development_dependency "rake"
-  s.add_development_dependency "json"
+  s.add_development_dependency "bundler", "~> 1.13"
+  s.add_development_dependency "rspec", "~> 3.5"
+  s.add_development_dependency "rake", "~> 12.0"
+  s.add_development_dependency "json", "~> 2.0"
 
   s.files        = `git ls-files`.split("\n")
   s.test_files   = `git ls-files -- {test,spec,features}/*`.split("\n")
