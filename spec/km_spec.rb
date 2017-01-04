@@ -2,8 +2,6 @@ require 'setup'
 describe KMTS do
   before do
     KMTS::reset
-    now = Time.now
-    Time.stub!(:now).and_return(now)
     FileUtils.rm_f KMTS::log_name(:error)
     FileUtils.rm_f KMTS::log_name(:query)
     Helper.clear
@@ -19,7 +17,7 @@ describe KMTS do
   end
 
   it "shouldn't fail on alias without identifying" do
-    KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => '127.0.0.1:9292'
+    KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => 'http://127.0.0.1:9292'
     KMTS::alias 'peter','joe' # Alias "bob" to "robert"
     sleep 0.1
     res = Helper.accept(:history).first.indifferent
@@ -27,11 +25,11 @@ describe KMTS do
     res[:query]['_k'].first.should == 'KM_OTHER'
     res[:query]['_p'].first.should == 'peter'
     res[:query]['_n'].first.should == 'joe'
-    res[:query]['_t'].first.should == Time.now.to_i.to_s
+    res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
   end
 
   it "shouldn't fail on alias without identifying from commandline" do
-    KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => '127.0.0.1:9292'
+    KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => 'http://127.0.0.1:9292'
     KMTS::alias 'peter','joe' # Alias "bob" to "robert"
     sleep 0.1
     res = Helper.accept(:history).first.indifferent
@@ -39,12 +37,20 @@ describe KMTS do
     res[:query]['_k'].first.should == 'KM_OTHER'
     res[:query]['_p'].first.should == 'peter'
     res[:query]['_n'].first.should == 'joe'
-    res[:query]['_t'].first.should == Time.now.to_i.to_s
+    res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
+  end
+
+  it "should allow sending to https endpoints" do
+    lambda do
+      allow(KMTS).to receive(:log_error).and_raise('Error')
+      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => 'https://trk.kissmetrics.com/'
+      KMTS::record 'bob', 'My Action'
+    end.should_not raise_error
   end
 
   describe "should record events" do
     before do
-      KMTS::init 'KM_KEY', :log_dir => __('log'), :host => '127.0.0.1:9292'
+      KMTS::init 'KM_KEY', :log_dir => __('log'), :host => 'http://127.0.0.1:9292'
     end
     it "records an action with no action-specific properties" do
       KMTS::record 'bob', 'My Action'
@@ -54,7 +60,7 @@ describe KMTS do
       res[:query]['_k'].first.should == 'KM_KEY'
       res[:query]['_p'].first.should == 'bob'
       res[:query]['_n'].first.should == 'My Action'
-      res[:query]['_t'].first.should == Time.now.to_i.to_s
+      res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
     end
     it "records an action with properties" do
       KMTS::record 'bob', 'Signup', 'age' => 26
@@ -64,7 +70,7 @@ describe KMTS do
       res[:query]['_k'].first.should == 'KM_KEY'
       res[:query]['_p'].first.should == 'bob'
       res[:query]['_n'].first.should == 'Signup'
-      res[:query]['_t'].first.should == Time.now.to_i.to_s
+      res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
       res[:query]['age'].first.should == 26.to_s
     end
     it "should be able to hace spaces in key and value" do
@@ -75,7 +81,7 @@ describe KMTS do
       res[:query]['_k'].first.should == 'KM_KEY'
       res[:query]['_p'].first.should == 'bob'
       res[:query]['_n'].first.should == 'Signup'
-      res[:query]['_t'].first.should == Time.now.to_i.to_s
+      res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
       res[:query]['age'].first.should == 26.to_s
       res[:query]['city of residence'].first.should == 'eug ene'
     end
@@ -87,7 +93,7 @@ describe KMTS do
       res[:query]['_k'].first.should == 'KM_KEY'
       res[:query]['_p'].first.should == 'bob'
       res[:query]['_n'].first.should == 'Signup'
-      res[:query]['_t'].first.should == Time.now.to_i.to_s
+      res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
       res[:query]['age'].first.should == 26.to_s
     end
     it "should work with propps using @" do
@@ -97,7 +103,7 @@ describe KMTS do
       res[:query]['_k'].first.should == 'KM_KEY'
       res[:query]['_p'].first.should == 'bob'
       res[:query]['_n'].first.should == 'Signup'
-      res[:query]['_t'].first.should == Time.now.to_i.to_s
+      res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
       res[:query]['email'].first.should == 'test@blah.com'
     end
     it "should just set properties without event" do
@@ -107,7 +113,7 @@ describe KMTS do
       res[:path].should == '/s'
       res[:query]['_k'].first.should == 'KM_KEY'
       res[:query]['_p'].first.should == 'bob'
-      res[:query]['_t'].first.should == Time.now.to_i.to_s
+      res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
       res[:query]['age'].first.should == 26.to_s
     end
     it "should be able to use km set directly" do
@@ -117,7 +123,7 @@ describe KMTS do
       res[:path].should == '/s'
       res[:query]['_k'].first.should == 'KM_KEY'
       res[:query]['_p'].first.should == 'bob'
-      res[:query]['_t'].first.should == Time.now.to_i.to_s
+      res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
       res[:query]['age'].first.should == 26.to_s
     end
     it "should work with multiple lines" do
@@ -131,13 +137,13 @@ describe KMTS do
       res[:query]['_k'].first.should == 'KM_KEY'
       res[:query]['_p'].first.should == 'bob'
       res[:query]['_n'].first.should == 'Signup'
-      res[:query]['_t'].first.should == Time.now.to_i.to_s
+      res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
       res[:query]['age'].first.should == 26.to_s
       res = Helper.accept(:history)[1].indifferent
       res[:path].should == '/e'
       res[:query]['_k'].first.should == 'KM_KEY'
       res[:query]['_p'].first.should == 'bob'
-      res[:query]['_t'].first.should == Time.now.to_i.to_s
+      res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
       res[:query]['age'].first.should == 36.to_s
     end
     it "should not have key hardcoded anywhere" do
@@ -149,7 +155,7 @@ describe KMTS do
       res[:query]['_k'].first.should == 'KM_OTHER'
       res[:query]['_p'].first.should == 'truman'
       res[:query]['_n'].first.should == 'harry'
-      res[:query]['_t'].first.should == Time.now.to_i.to_s
+      res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
     end
   end
   context "reading from files" do
@@ -160,14 +166,14 @@ describe KMTS do
       KMTS.reset
     end
     it "should run fine even though there's no server to connect to" do
-      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => '127.0.0.1:9291', :to_stderr => false
+      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => '127.0.0.1:9291', :to_stderr => false, :env => 'production'
       KMTS::record 'bob', 'My Action' # records an action with no action-specific properties;
       Helper.accept(:history).size.should == 0
       File.exists?(__('log/kissmetrics_production_query.log')).should == true
       File.exists?(__('log/kissmetrics_production_error.log')).should == true
     end
     it "should escape @ properly" do
-      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => '127.0.0.1:9292', :to_stderr => false, :use_cron => true
+      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => 'http://127.0.0.1:9292', :to_stderr => false, :use_cron => true
       KMTS::record 'bob', 'prop_with_@_in' # records an action with no action-specific properties;
       IO.readlines(KMTS::log_name(:query)).join.should_not contain_string('@')
     end

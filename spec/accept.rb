@@ -17,7 +17,7 @@ class Accept
 
     puts "Starting up server on port #{opts[:port]} ..."
     @opts           = opts
-    @server         = TCPServer.new(opts[:port])
+    @server         = TCPServer.new('127.0.0.1', opts[:port])
     @@input_history = []
     @handle         = Thread.start do
       loop do

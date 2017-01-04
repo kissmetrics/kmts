@@ -7,12 +7,15 @@ require 'kmts/saas'
 class KMError < StandardError; end
 
 class KMTS
+  DEFAULT_TRACKING_SERVER = 'https://trk.kissmetrics.com'.freeze
+  PROTOCOL_MATCHER = %r(://)
+
   @key       = nil
   @logs      = {}
-  @host      = 'trk.kissmetrics.com:80'
+  @host      = DEFAULT_TRACKING_SERVER
   @log_dir   = '/tmp'
   @to_stderr = true
-  @use_cron  = false
+  @use_cron  = true
   @dryrun    = false
 
   class << self
@@ -121,7 +124,7 @@ class KMTS
       @id         = nil
       @key        = nil
       @logs       = {}
-      @host       = 'trk.kissmetrics.com:80'
+      @host       = DEFAULT_TRACKING_SERVER
       @log_dir    = '/tmp'
       @to_stderr  = true
       @use_cron   = false
@@ -189,11 +192,11 @@ class KMTS
       query     = ''
       data.update('_p' => id) if id
       data.update('_k' => @key)
-      data.update '_d' => 1 if data['_t']
+      data.update '_d' => 1 if data['_t'] || @use_cron
       data['_t'] ||= Time.now.to_i
-      
+
       unsafe = Regexp.new("[^#{URI::REGEXP::PATTERN::UNRESERVED}]", false, 'N')
-      
+
       data.inject(query) do |query,key_val|
         query_arr <<  key_val.collect { |i| URI.escape(i.to_s, unsafe) }.join('=')
       end
@@ -215,11 +218,13 @@ class KMTS
         log_sent(line)
       else
         begin
-          host,port = @host.split(':')
-          proxy = URI.parse(ENV['http_proxy'] || ENV['HTTP_PROXY'] || '')
-          res = Net::HTTP::Proxy(proxy.host, proxy.port, proxy.user, proxy.password).start(host, port) do |http|
-            http.get(line)
-          end
+          host = @host
+          host = "http://#{host}" unless host =~ PROTOCOL_MATCHER
+          uri = URI.parse(host)
+
+          http = Net::HTTP.new(uri.host, uri.port)
+          http.use_ssl = uri.is_a?(URI::HTTPS)
+          http.get(line)
         rescue Exception => e
           raise KMError.new("#{e} for host #{@host}")
         end

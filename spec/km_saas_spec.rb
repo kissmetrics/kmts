@@ -3,8 +3,6 @@ require 'kmts/saas'
 describe KMTS do
   before do
     KMTS::reset
-    now = Time.now
-    Time.stub!(:now).and_return(now)
     FileUtils.rm_f KMTS::log_name(:error)
     FileUtils.rm_f KMTS::log_name(:query)
     Helper.clear
@@ -12,7 +10,7 @@ describe KMTS do
 
   describe "should record events" do
     before do
-      KMTS::init 'KM_KEY', :log_dir => __('log'), :host => '127.0.0.1:9292'
+      KMTS::init 'KM_KEY', :log_dir => __('log'), :host => 'http://127.0.0.1:9292'
     end
     context "plain usage" do
       it "records a signup event" do
