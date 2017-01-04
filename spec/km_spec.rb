@@ -17,7 +17,7 @@ describe KMTS do
   end
 
   it "shouldn't fail on alias without identifying" do
-    KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => '127.0.0.1:9292'
+    KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => 'http://127.0.0.1:9292'
     KMTS::alias 'peter','joe' # Alias "bob" to "robert"
     sleep 0.1
     res = Helper.accept(:history).first.indifferent
@@ -29,7 +29,7 @@ describe KMTS do
   end
 
   it "shouldn't fail on alias without identifying from commandline" do
-    KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => '127.0.0.1:9292'
+    KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => 'http://127.0.0.1:9292'
     KMTS::alias 'peter','joe' # Alias "bob" to "robert"
     sleep 0.1
     res = Helper.accept(:history).first.indifferent
@@ -40,9 +40,17 @@ describe KMTS do
     res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
   end
 
+  it "should allow sending to https endpoints" do
+    lambda do
+      allow(KMTS).to receive(:log_error).and_raise('Error')
+      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => 'https://trk.kissmetrics.com/'
+      KMTS::record 'bob', 'My Action'
+    end.should_not raise_error
+  end
+
   describe "should record events" do
     before do
-      KMTS::init 'KM_KEY', :log_dir => __('log'), :host => '127.0.0.1:9292'
+      KMTS::init 'KM_KEY', :log_dir => __('log'), :host => 'http://127.0.0.1:9292'
     end
     it "records an action with no action-specific properties" do
       KMTS::record 'bob', 'My Action'
@@ -165,7 +173,7 @@ describe KMTS do
       File.exists?(__('log/kissmetrics_production_error.log')).should == true
     end
     it "should escape @ properly" do
-      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => '127.0.0.1:9292', :to_stderr => false, :use_cron => true
+      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => 'http://127.0.0.1:9292', :to_stderr => false, :use_cron => true
       KMTS::record 'bob', 'prop_with_@_in' # records an action with no action-specific properties;
       IO.readlines(KMTS::log_name(:query)).join.should_not contain_string('@')
     end

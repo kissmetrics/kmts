@@ -10,7 +10,7 @@ describe KMTS do
 
   describe "should record events" do
     before do
-      KMTS::init 'KM_KEY', :log_dir => __('log'), :host => '127.0.0.1:9292'
+      KMTS::init 'KM_KEY', :log_dir => __('log'), :host => 'http://127.0.0.1:9292'
     end
     context "plain usage" do
       it "records a signup event" do
