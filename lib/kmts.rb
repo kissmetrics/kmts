@@ -15,7 +15,7 @@ class KMTS
   @host      = DEFAULT_TRACKING_SERVER
   @log_dir   = '/tmp'
   @to_stderr = true
-  @use_cron  = false
+  @use_cron  = true
   @dryrun    = false
 
   class << self
