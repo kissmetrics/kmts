@@ -24,6 +24,7 @@ describe 'km_send' do
         res[:query]['_k'].first.should == 'KM_KEY'
         res[:query]['_p'].first.should == 'bob'
         res[:query]['_n'].first.should == 'Signup'
+        res[:query]['_d'].first.should == '1'
         res[:query]['_t'].first.to_i.should be_within(10.0).of(Time.now.to_i)
         res[:query]['age'].first.should == '26'
       end
@@ -91,6 +92,7 @@ describe 'km_send' do
       res[:query]['_k'].first.should == 'KM_KEY'
       res[:query]['_p'].first.should == 'bob'
       res[:query]['_n'].first.should == 'Signup'
+      res[:query]['_d'].first.should == '1'
       res[:query]['_t'].first.to_i.should be_within(10.0).of(Time.now.to_i)
       res[:query]['age'].first.should == '26'
     end
