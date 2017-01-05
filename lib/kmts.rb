@@ -129,7 +129,6 @@ class KMTS
       @to_stderr  = true
       @use_cron   = false
       @env        = nil
-      @force = false
     end
 
     def log_name(type)

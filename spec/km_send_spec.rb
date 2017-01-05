@@ -85,7 +85,7 @@ describe 'km_send' do
     it "should send from diff environment when force flag is used" do
       KMTS::init 'KM_KEY', :log_dir => __('log'), :host => 'http://127.0.0.1:9292', :use_cron => true, :env => 'development', :force => true
       KMTS::record 'bob', 'Signup', 'age' => 26
-      `bundle exec km_send -f -e development #{__('log/')} http://127.0.0.1:9292`
+      `bundle exec km_send -e development #{__('log/')} http://127.0.0.1:9292`
       sleep 0.1
       res = Helper.accept(:history).first.indifferent
       res[:path].should == '/e'
