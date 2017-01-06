@@ -35,6 +35,7 @@ The available options are:
 * `to_stderr`: allows toggling of printing output to `stderr`. Default is `true`.
 * `dryrun`: New option as of November 25, 2012. Toggles whether to send data to Kissmetrics, or just log it to a file to review for debugging. Default is `false`, which means data is sent to Kissmetrics, regardless of whether you're working in a production or development environment.
 * `env`: Updated option as of November 25, 2012. The environment variable now just helps us name the log files that store the history of event requests. This uses the Rails and Rack variables to determine if your Ruby environment is in `development`. If the Rails and Rack variables are not available, we default to `production`.
+* `force_key`: Allows each individual request to specify the API key through the `_k` param. By default the `_k` is set on all requests using the value provided to `KMTS.init`. The `_k` key will default to the API key if no value is passed in. Defaults to **true**.
 
 ### Sample:
 
