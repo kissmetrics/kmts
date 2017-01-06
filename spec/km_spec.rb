@@ -157,6 +157,34 @@ describe KMTS do
       res[:query]['_n'].first.should == 'harry'
       res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
     end
+
+    it "allows overriding of km_key" do
+      KMTS::init 'KM_OTHER', :log_dir => __('log'), :force_key => false
+      KMTS::record 'bob', 'Signup', 'age' => 36, '_k' => 'OTHER_KEY'
+      sleep 0.1
+
+      res = Helper.history.first.indifferent
+      res[:path].should == '/e'
+      res[:query]['_k'].first.should == 'OTHER_KEY'
+      res[:query]['_p'].first.should == 'bob'
+      res[:query]['_n'].first.should == 'Signup'
+      res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
+      res[:query]['age'].first.should == 36.to_s
+    end
+
+    it "uses default key when force_key is disabled" do
+      KMTS::init 'KM_OTHER', :log_dir => __('log'), :force_key => false
+      KMTS::record 'bob', 'Signup', 'age' => 36
+      sleep 0.1
+
+      res = Helper.history.first.indifferent
+      res[:path].should == '/e'
+      res[:query]['_k'].first.should == 'KM_OTHER'
+      res[:query]['_p'].first.should == 'bob'
+      res[:query]['_n'].first.should == 'Signup'
+      res[:query]['_t'].first.to_i.should be_within(2.0).of(Time.now.to_i)
+      res[:query]['age'].first.should == 36.to_s
+    end
   end
   context "reading from files" do
     before do

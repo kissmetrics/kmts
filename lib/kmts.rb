@@ -17,6 +17,7 @@ class KMTS
   @to_stderr = true
   @use_cron  = true
   @dryrun    = false
+  @force_key = true
 
   class << self
     class IdentError < StandardError; end
@@ -30,6 +31,7 @@ class KMTS
         :use_cron  => @use_cron,
         :dryrun    => @dryrun,
         :env       => set_env,
+        :force_key => @force_key
       }
       options = default.merge(options)
 
@@ -41,6 +43,7 @@ class KMTS
         @to_stderr = options[:to_stderr]
         @dryrun    = options[:dryrun]
         @env       = options[:env]
+        @force_key = options[:force_key]
         log_dir_writable?
       rescue Exception => e
         log_error(e)
@@ -130,6 +133,7 @@ class KMTS
       @use_cron   = false
       @env        = nil
       @force = false
+      @force_key  = true
     end
 
     def log_name(type)
@@ -191,9 +195,14 @@ class KMTS
       query_arr = []
       query     = ''
       data.update('_p' => id) if id
-      data.update('_k' => @key)
       data.update '_d' => 1 if data['_t'] || @use_cron
       data['_t'] ||= Time.now.to_i
+
+      if @force_key
+        data['_k'] = @key
+      else
+        data['_k'] ||= @key
+      end
 
       unsafe = Regexp.new("[^#{URI::REGEXP::PATTERN::UNRESERVED}]", false, 'N')
 
