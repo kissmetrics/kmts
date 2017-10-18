@@ -150,7 +150,9 @@ class KMTS
       when :sent
         fname = "kissmetrics#{env}_sent.log"
       when :send
-        fname = Time.now.to_i.to_s + "kissmetrics_#{env}_sending.log"
+        now = Time.now.to_i
+        id = rand(2**64).to_s(16)
+        fname = "#{now}_#{id}_kissmetrics_#{env}_sending.log"
       end
       @logs[type] = File.join(@log_dir,fname)
     end
