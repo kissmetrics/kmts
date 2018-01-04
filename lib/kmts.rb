@@ -1,4 +1,5 @@
 require 'uri'
+require 'erb'
 require 'socket'
 require 'net/http'
 require 'fileutils'
@@ -206,10 +207,8 @@ class KMTS
         data['_k'] ||= @key
       end
 
-      unsafe = Regexp.new("[^#{URI::REGEXP::PATTERN::UNRESERVED}]", false, 'N')
-
       data.inject(query) do |query,key_val|
-        query_arr <<  key_val.collect { |i| URI.escape(i.to_s, unsafe) }.join('=')
+        query_arr <<  key_val.collect { |i| ERB::Util.url_encode(i.to_s) }.join('=')
       end
       query = '/' + type + '?' + query_arr.join('&')
       if @use_cron
