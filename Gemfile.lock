@@ -32,6 +32,3 @@ DEPENDENCIES
   kmts!
   rake (~> 12.0)
   rspec (~> 3.5)
-
-BUNDLED WITH
-   1.13.7
