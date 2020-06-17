@@ -8,7 +8,7 @@ GEM
   specs:
     diff-lcs (1.2.5)
     json (2.0.2)
-    rake (12.0.0)
+    rake (13.0.1)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -30,5 +30,5 @@ DEPENDENCIES
   bundler (~> 1.13)
   json (~> 2.0)
   kmts!
-  rake (~> 12.0)
+  rake (~> 13.0)
   rspec (~> 3.5)
