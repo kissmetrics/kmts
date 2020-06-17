@@ -8,7 +8,7 @@ require 'kmts/saas'
 class KMError < StandardError; end
 
 class KMTS
-  DEFAULT_TRACKING_SERVER = 'https://trk.kissmetrics.com'.freeze
+  DEFAULT_TRACKING_SERVER = 'https://trk.kissmetrics.io'.freeze
   PROTOCOL_MATCHER = %r(://)
 
   @key       = nil
