@@ -6,6 +6,10 @@ This gem is a threadsafe fork of the original `km` gem.
 
 Version 1.0.2 of the `kmts` gem had an issue where it was found to not actually be thread safe. If you were using version 1.0.2 of the `kmts` gem, you were likely using non thread-safe code. In this case, you will want to either switch to using the non thread-safe [`km`](https://github.com/kissmetrics/km) gem, or update your code to use the thread-safe `kmts` gem version >= 2.0.0.
 
+## `kmts` version 3.1.0
+
+Uses the `trk.kissmetrics.io` tracking domain.
+
 ## Setup
 
 The best way to install the gem is using `gem install kmts` or by adding it to your `Gemfile`:
