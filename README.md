@@ -18,7 +18,7 @@ Otherwise, the gem is available on GitHub:
 
 https://github.com/kissmetrics/kmts
 
-You will need your API key which you can find in your [site settings](http://support.kissmetrics.com/misc/site-settings).
+You will need your API key which you can find in your [site settings](https://support.kissmetrics.io/docs/product-settings).
 
 ## Usage
 
@@ -30,7 +30,7 @@ KMTS.init('KM_KEY' [, options])
 
 The available options are:
 
-* `log_dir`: sets the logging directory. Default is `'/tmp'`. Please make sure that the directory exists, and that whatever web process is writing to the log has permission to write to that directory. The log file will contain a list of the URLs that would be requested (`trk.kissmetrics.com` URLs - please refer to [API Specifications](http://support.kissmetrics.com/apis/specifications.html).
+* `log_dir`: sets the logging directory. Default is `'/tmp'`. Please make sure that the directory exists, and that whatever web process is writing to the log has permission to write to that directory. The log file will contain a list of the URLs that would be requested (`trk.kissmetrics.io` URLs - please refer to [API Specifications](https://support.kissmetrics.io/reference#api-specifications-1).
 * `use_cron`: toggles whether to send data directly to Kissmetrics, or log to a file and send in the background via cron (see [Sending Data with Cron](http://support.kissmetrics.com/apis/cron) for more information). As of version 3.0, the default is `true`, which means data is saved to a local log file. Using cron is optional, but **recommended**.
 * `to_stderr`: allows toggling of printing output to `stderr`. Default is `true`.
 * `dryrun`: New option as of November 25, 2012. Toggles whether to send data to Kissmetrics, or just log it to a file to review for debugging. Default is `false`, which means data is sent to Kissmetrics, regardless of whether you're working in a production or development environment.
@@ -57,7 +57,7 @@ KMTS.alias('bob', 'bob@bob.com')
 
 ## Troubleshooting
 
-If you were watching for the events in [Kissmetrics Live](http://support.kissmetrics.com/tools/live) and did not see them, it helps to review what our library logged. In the log directory, you may see these files:
+If you were watching for the events in [Kissmetrics Live](https://support.kissmetrics.io/docs/live-1) and did not see them, it helps to review what our library logged. In the log directory, you may see these files:
 
 * `kissmetrics_production_sent.log`
 * `kissmetrics_production_query.log`

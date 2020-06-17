@@ -43,7 +43,7 @@ describe KMTS do
   it "should allow sending to https endpoints" do
     lambda do
       allow(KMTS).to receive(:log_error).and_raise('Error')
-      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => 'https://trk.kissmetrics.com/'
+      KMTS::init 'KM_OTHER', :log_dir => __('log'), :host => 'https://trk.kissmetrics.io/'
       KMTS::record 'bob', 'My Action'
     end.should_not raise_error
   end

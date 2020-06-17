@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.license     = "Apache-2.0"
   s.authors     = ["Kissmetrics"]
-  s.email       = ["support@kissmetrics.com"]
+  s.email       = ["support@kissmetrics.io"]
   s.homepage    = "https://github.com/kissmetrics/kmts"
   s.summary     = "Threadsafe Ruby gem for Kissmetrics tracking API"
   s.description = "A threadsafe Ruby gem that can be used to interact with the Kissmetrics tracking API."

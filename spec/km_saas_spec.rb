@@ -54,13 +54,13 @@ describe KMTS do
         res[:query]['_n'].first.should == 'Canceled'
       end
       it "records a visited site event" do
-        KMTS.visited_site 'bob', 'http://duckduckgo.com', 'http://kissmetrics.com'
+        KMTS.visited_site 'bob', 'http://duckduckgo.com', 'http://kissmetrics.io'
         sleep 0.1
         res = Helper.accept(:history).first.indifferent
         res[:path].should == '/e'
         res[:query]['_n'].first.should == 'Visited Site'
         res[:query]['URL'].first.should == 'http://duckduckgo.com'
-        res[:query]['Referrer'].first.should == 'http://kissmetrics.com'
+        res[:query]['Referrer'].first.should == 'http://kissmetrics.io'
       end
     end
     context "usage with props" do
@@ -95,7 +95,7 @@ describe KMTS do
         res[:query]['foo'].first.should == 'bar'
       end
       it "records a visited site event" do
-        KMTS.visited_site 'bob', 'http://duckduckgo.com', 'http://kissmetrics.com', :foo => 'bar'
+        KMTS.visited_site 'bob', 'http://duckduckgo.com', 'http://kissmetrics.io', :foo => 'bar'
         sleep 0.1
         res = Helper.accept(:history).first.indifferent
         res[:query]['foo'].first.should == 'bar'
