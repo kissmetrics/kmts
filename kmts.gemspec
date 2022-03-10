@@ -13,12 +13,13 @@ Gem::Specification.new do |s|
   s.description = "A threadsafe Ruby gem that can be used to interact with the Kissmetrics tracking API."
 
   s.required_rubygems_version = ">= 1.3.6"
+  s.required_ruby_version     = Gem::Requirement.new(">= 2.4.0")
   s.rubyforge_project         = "kissmetrics"
 
-  s.add_development_dependency "bundler", "~> 1.13"
-  s.add_development_dependency "rspec", "~> 3.5"
-  s.add_development_dependency "rake", "~> 12.0"
-  s.add_development_dependency "json", "~> 2.0"
+  s.add_development_dependency "bundler", "~> 2"
+  s.add_development_dependency "json", "~> 2.6"
+  s.add_development_dependency "rake", "~> 13"
+  s.add_development_dependency "rspec", "~> 3"
 
   s.files        = `git ls-files`.split("\n")
   s.test_files   = `git ls-files -- {test,spec,features}/*`.split("\n")
